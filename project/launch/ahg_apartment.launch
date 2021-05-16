@@ -1,0 +1,23 @@
+<launch>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="world" default="gazebo"/>
+
+  <arg name="gazebo_binary" value="gzserver"/>
+  
+  <!-- set use_sim_time_flag -->
+  <group if="$(arg use_sim_time)">
+    <param name="/use_sim_time" value="true"/>
+  </group>
+
+  <!-- start world -->
+  <node name="$(arg world)" pkg="gazebo_ros" type="$(arg gazebo_binary)" args="$(find ahg_gazebo_simulation)/worlds/ahg_apartment.world" respawn="false" output="screen" launch-prefix="$(optenv OPTIRUN_LAUNCH_PREFIX)"/>
+
+  <!-- start gui -->
+  <group if="$(arg gui)">
+    <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen" launch-prefix="$(optenv OPTIRUN_LAUNCH_PREFIX)"/>
+
+  </group>
+
+  
+</launch>
