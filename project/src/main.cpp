@@ -318,6 +318,7 @@ void cloud_cb4 ( sensor_msgs::PointCloud2& input)
 }
 
 
+//segment out table and everything but the table
 void cloud_cb (const boost::shared_ptr<const sensor_msgs::PointCloud2>& input)
 {
     pcl::PCLPointCloud2 cloud2;
@@ -342,7 +343,7 @@ void cloud_cb (const boost::shared_ptr<const sensor_msgs::PointCloud2>& input)
     pcl::toPCLPointCloud2(*table_clouds.second, outputInProgressB);
     pcl_conversions::fromPCL(outputInProgressB, outputBetter);
 
-  // Do data processing here...
+   //Do data processing here...
     ROS_INFO("Now publishing table clouds");
 
 
@@ -357,19 +358,13 @@ void cloud_cb (const boost::shared_ptr<const sensor_msgs::PointCloud2>& input)
 
     cyl_pub.publish (outputA2);
 
-    cloud_cb3(will_become_cylinder); //test this
+    cloud_cb3(will_become_cylinder); 
     cloud_cb4(will_become_cylinder);
-  // // Publish the data.
-     table_pub.publish (outputA);
-     not_table_pub.publish (outputBetter);
-    
 
-
-
-    
+    // Publish the data.
+    table_pub.publish (outputA);
+    not_table_pub.publish (outputBetter); 
 }
-
-
 
 
 int main (int argc, char** argv)
@@ -380,7 +375,6 @@ int main (int argc, char** argv)
 
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe ("/hsrb/head_rgbd_sensor/depth_registered/rectified_points", 1, cloud_cb);
-  // ros::Subscriber sub2 = nh.subscribe ("/hsrb/head_rgbd_sensor/depth_registered/rectified_points", 1, cloud_cb3);
 
   // Create a ROS publisher for the output point cloud
   table_pub = nh.advertise<sensor_msgs::PointCloud2> ("table", 1);
@@ -388,9 +382,6 @@ int main (int argc, char** argv)
   cyl_pub = nh.advertise<sensor_msgs::PointCloud2> ("objects", 1);
   pub2 = nh.advertise<sensor_msgs::PointCloud2> ("please_cylinder", 1);
   cyl_pub2 = nh.advertise<sensor_msgs::PointCloud2> ("please_sphere", 1);
-  // pub2 = nh.advertise<sensor_msgs::PointCloud2> ("them_chips", 1);
 
-
-  // Spin
   ros::spin ();
 }
