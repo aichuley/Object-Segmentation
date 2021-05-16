@@ -226,7 +226,7 @@ void cloud_cb4 ( sensor_msgs::PointCloud2& input)
     pcl::PointCloud<PointT>::Ptr cloud_filtered2 (new pcl::PointCloud<PointT>);
     pcl::PointCloud<pcl::Normal>::Ptr cloud_normals2 (new pcl::PointCloud<pcl::Normal>);
     pcl::ModelCoefficients::Ptr coefficients_plane (new pcl::ModelCoefficients), coefficients_sphere (new pcl::ModelCoefficients);
-    pcl::PointIndices::Ptr inliers_plane (new pcl::PointIndices), inliers_cylinder (new pcl::PointIndices);
+    pcl::PointIndices::Ptr inliers_plane (new pcl::PointIndices), inliers_sphere (new pcl::PointIndices);
 
     // Build a passthrough filter to remove spurious NaNs
     pass.setInputCloud (cloud);
@@ -280,14 +280,14 @@ void cloud_cb4 ( sensor_msgs::PointCloud2& input)
 
 
     // Obtain the sphere inliers and coefficients
-    seg.segment (*inliers_cylinder, *coefficients_sphere);
+    seg.segment (*inliers_sphere, *coefficients_sphere);
 
     // Write the sphere inliers to disk
     extract.setInputCloud (cloud_filtered2);
-    extract.setIndices (inliers_cylinder);
+    extract.setIndices (inliers_sphere);
     extract.setNegative (false);
-    pcl::PointCloud<PointT>::Ptr cloud_cylinder (new pcl::PointCloud<PointT> ());
-    extract.filter (*cloud_cylinder);
+    pcl::PointCloud<PointT>::Ptr cloud_sphere (new pcl::PointCloud<PointT> ());
+    extract.filter (*cloud_sphere);
 
     //publish tf coeff
     geometry_msgs::TransformStamped transformStamped;
@@ -298,7 +298,7 @@ void cloud_cb4 ( sensor_msgs::PointCloud2& input)
 
 
     transformStamped.transform.translation.x = coefficients_sphere->values[0];
-    transformStamped.transform.translation.y = coefficients_spherer->values[1];
+    transformStamped.transform.translation.y = coefficients_sphere->values[1];
     transformStamped.transform.translation.z = coefficients_sphere->values[2];
 
     transformStamped.transform.rotation.x = 0;
@@ -312,7 +312,7 @@ void cloud_cb4 ( sensor_msgs::PointCloud2& input)
     // We also added this
     pcl::PCLPointCloud2 outputInProgress;
     sensor_msgs::PointCloud2 output;
-    pcl::toPCLPointCloud2(*cloud_cylinder, outputInProgress);
+    pcl::toPCLPointCloud2(*cloud_sphere, outputInProgress);
     pcl_conversions::fromPCL(outputInProgress, output);
     cyl_pub2.publish (output);
 }
