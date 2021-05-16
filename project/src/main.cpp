@@ -202,7 +202,7 @@ void cloud_cb3 ( sensor_msgs::PointCloud2& input)
 }
 
 
-//sphere segmentation method
+//sphere segmentation
 void cloud_cb4 ( sensor_msgs::PointCloud2& input)
 {
     // All the objects needed
