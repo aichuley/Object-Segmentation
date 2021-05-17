@@ -211,6 +211,7 @@ std::pair<pcl::PointCloud<pcl::PointXYZRGB>::Ptr, pcl::PointCloud<pcl::PointXYZR
     pcl::toPCLPointCloud2(*not_cloud_cylinder, outputInProgress2);
     pcl_conversions::fromPCL(outputInProgress2, output2);
   
+    //return everything not containing the cylinder we already published
     return output2;
 }
 
